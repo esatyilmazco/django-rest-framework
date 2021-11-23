@@ -5,14 +5,14 @@ from django.utils.text import slugify
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     title = models.CharField(max_length=120)
     content = models.TextField()
     draft = models.BooleanField(default=False)
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
     slug = models.SlugField(unique=True, max_length=150, editable=False)
-    image = models.ImageField(upload_to='media/post/')
+    image = models.ImageField(upload_to='media/post/', null=True, blank=True)
 
     def get_slug(self):
         slug = slugify(self.title.replace("ı", "i"))
@@ -24,6 +24,9 @@ class Post(models.Model):
             number += 1
 
         return unique
+
+    def __str__(self):
+        return self.title
 
     def save(self, *args, **kwargs):
         if not self.id:
