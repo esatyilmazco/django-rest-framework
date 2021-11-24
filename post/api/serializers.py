@@ -9,10 +9,15 @@ class PostSerializer(serializers.ModelSerializer):
 
     )
 
+    username = serializers.SerializerMethodField()
+
     class Meta:
         model = Post
-        fields = ('user', 'title', 'content', 'image',
+        fields = ('username', 'title', 'content', 'image',
                   'url', 'created', 'modified_by')
+
+    def get_username(self, obj):
+        return str(obj.user.username)
 
     def save(self, **kwargs):
         return True
