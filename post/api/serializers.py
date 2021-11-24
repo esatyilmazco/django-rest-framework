@@ -7,3 +7,6 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('user', 'title', 'content', 'image',
                   'slug', 'created', 'modified_by')
+
+    def save(self, **kwargs):
+        return True
