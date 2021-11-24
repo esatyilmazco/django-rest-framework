@@ -11,7 +11,6 @@ from rest_framework.permissions import (
 
 
 class PostListAPIView(ListAPIView):
-
     serializer_class = PostSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'content']
