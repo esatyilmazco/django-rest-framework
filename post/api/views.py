@@ -1,5 +1,6 @@
 from rest_framework import pagination
 from rest_framework.generics import DestroyAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView, CreateAPIView
+from rest_framework.mixins import DestroyModelMixin
 from post.models import Post
 from post.api.serializers import PostSerializer
 from post.api.permissions import IsOwner
@@ -8,6 +9,7 @@ from post.api.paginations import PostPagination
 from rest_framework.permissions import (
     IsAuthenticated,
 )
+from django.contrib.auth.models import User
 
 
 class PostListAPIView(ListAPIView):
@@ -27,21 +29,17 @@ class PostDetailAPIView(RetrieveAPIView):
     lookup_field = 'slug'
 
 
-class PostDeleteAPIView(DestroyAPIView):
+class PostUpdateAPIView(RetrieveUpdateAPIView, DestroyModelMixin):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    lookup_field = 'slug'
-    permission_classes = [IsOwner]
-
-
-class PostUpdateAPIView(RetrieveUpdateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostSerializer  # düzelecek burası
     lookup_field = 'slug'
     permission_classes = [IsOwner]
 
     def perform_update(self, serializer):
         serializer.save(modified_by=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(self, request, *args, **kwargs)
 
 
 class PostCreateAPIView(CreateAPIView):
