@@ -1,8 +1,8 @@
 
 
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from favourite.models import Favourite
-from django.contrib.sessions import serializers
 
 
 class FavouriteListCreateAPISerilazer(ModelSerializer):
@@ -16,3 +16,9 @@ class FavouriteListCreateAPISerilazer(ModelSerializer):
         if queryset.exists():
             raise serializers.ValidationError("already")
         return attrs
+
+
+class FavouriteAPISerilazer(ModelSerializer):
+    class Meta:
+        model = Favourite
+        fields = '__all__'
