@@ -1,7 +1,9 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, UpdateAPIView
+from django.db.models import query
+from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, RetrieveAPIView, UpdateAPIView
 from comment.models import Comment
 from comment.api.serializers import CommentCreateSerializer, CommentListSerializer, CommentDeleteUpdateSerializer
 from comment.api.permission import IsOwner
+from comment.api.paginations import CommentPagination
 
 
 class CommentCreateAPIView(CreateAPIView):
@@ -14,9 +16,14 @@ class CommentCreateAPIView(CreateAPIView):
 
 class CommentListAPIView(ListAPIView):
     serializer_class = CommentListSerializer
+    pagination_class = CommentPagination
 
     def get_queryset(self):
-        return Comment.objects.filter(parent=None)
+        queryset = Comment.objects.filter(parent=None)
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(post=query)
+        return queryset
 
 
 class CommentDeleteAPIView(DestroyAPIView):
@@ -26,7 +33,7 @@ class CommentDeleteAPIView(DestroyAPIView):
     permission_classes = [IsOwner]
 
 
-class CommentUpdateAPIView(UpdateAPIView):
+class CommentUpdateAPIView(UpdateAPIView, RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDeleteUpdateSerializer
     lookup_field = 'pk'
