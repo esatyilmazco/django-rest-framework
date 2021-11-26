@@ -1,14 +1,16 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from favourite.api.paginations import FavouritePagination
 from favourite.api.permissions import IsOwner
 from favourite.api.serializers import FavouriteAPISerilazer, FavouriteListCreateAPISerilazer
 from favourite.models import Favourite
+from rest_framework.permissions import IsAuthenticated
 
 
 class FavouriteListCreateAPIView(ListCreateAPIView):
     queryset = Favourite.objects.all()
     serializer_class = FavouriteListCreateAPISerilazer
     pagination_class = FavouritePagination
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Favourite.objects.filter(user=self.request.user)
