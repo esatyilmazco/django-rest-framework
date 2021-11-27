@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from account.api.serializers import ChangePasswordSerializer, RegisterSerializer, UserSerializer
+from account.api.throttles import RegisterThrottle
 
 
 class ProfileView(RetrieveUpdateAPIView):
@@ -49,6 +50,6 @@ class UpdatePassword(APIView):
 
 
 class CreateUser(CreateAPIView):
+    throttle_classes = [RegisterThrottle]
     model = User.objects.all()
     serializer_class = RegisterSerializer
-    

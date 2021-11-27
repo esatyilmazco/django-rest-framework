@@ -43,7 +43,7 @@ class RegisterSerializer(ModelSerializer):
         fields = ('id', 'username', 'password')
 
     def validate(self, attr):
-        validate_password(attr["password"]) 
+        validate_password(attr["password"])
         return attr
 
     def create(self, validated_data):

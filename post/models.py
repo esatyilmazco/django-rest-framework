@@ -16,6 +16,9 @@ class Post(models.Model):
     modified_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name='Modified_by')
 
+    class Meta:
+        ordering = ["-id"]
+
     def get_slug(self):
         slug = slugify(self.title.replace("ı", "i"))
         unique = slug
