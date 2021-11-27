@@ -1,11 +1,11 @@
 
 from rest_framework import status
-from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from account.api.serializers import ChangePasswordSerializer, UserSerializer
+from account.api.serializers import ChangePasswordSerializer, RegisterSerializer, UserSerializer
 
 
 class ProfileView(RetrieveUpdateAPIView):
@@ -46,3 +46,9 @@ class UpdatePassword(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateUser(CreateAPIView):
+    model = User.objects.all()
+    serializer_class = RegisterSerializer
+    
